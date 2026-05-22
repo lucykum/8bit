@@ -22,7 +22,18 @@ def load_knowledge():
 def analyze_copy(user_input: str) -> dict:
     """에이전트 C: 마케팅 문구 분석 + 대체 카피 생성"""
     knowledge = load_knowledge()
-    knowledge_str = json.dumps(knowledge, ensure_ascii=False)[:6000]
+    forbidden = knowledge.get("금지표현", [])
+    allowed = knowledge.get("허용표현", [])
+    penalties = knowledge.get("처벌기준", [])
+
+    knowledge_str = (
+        "## 금지표현 목록\n"
+        + json.dumps(forbidden, ensure_ascii=False, indent=2)
+        + "\n\n## 허용표현 목록\n"
+        + json.dumps(allowed, ensure_ascii=False, indent=2)
+        + "\n\n## 처벌기준\n"
+        + json.dumps(penalties, ensure_ascii=False, indent=2)
+    )
 
     response = client.chat.completions.create(
         model="solar-pro3",
@@ -45,7 +56,7 @@ def analyze_copy(user_input: str) -> dict:
   }},
   "컴포넌트2_위반키워드테이블": [
     {{
-      "원본표현": "사용자가 쓴 표현",
+      "원본표현": "위험 단어·구문 단위로 분리 (예: '주름개선', '마법의' 각각 별도 항목)",
       "위험도": "상/중/하",
       "대체추천": "합법적 대체 표현",
       "근거": "관련 법령/지침"

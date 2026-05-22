@@ -62,7 +62,7 @@ def load_parsed_text():
 def build_knowledge_context():
     """에이전트 A·B: 파싱된 텍스트를 Solar Pro3로 구조화"""
     texts = load_parsed_text()
-    all_text = "\n\n".join([f"[{name}]\n{text[:8000]}" for name, text in texts.items()])
+    all_text = "\n\n".join([f"[{name}]\n{text[:30000]}" for name, text in texts.items()])
 
     response = client.chat.completions.create(
         model="solar-pro3",
